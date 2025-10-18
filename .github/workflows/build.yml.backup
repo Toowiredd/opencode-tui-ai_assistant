@@ -1,14 +1,10 @@
-# DISABLED AUTO-RUN: Originally triggered on auto-triggers
-# Converted to manual execution only - 2025-10-18
-# Backup available at: release.yml.backup
-name: release
+name: build
 
 on:
-  workflow_dispatch:  # Manual trigger only
-#   workflow_dispatch:
-#   push:
-#     tags:
-#       - "*"
+  workflow_dispatch:
+  push:
+    branches:
+      - main
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
@@ -17,7 +13,7 @@ permissions:
   packages: write
 
 jobs:
-  goreleaser:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -38,7 +34,4 @@ jobs:
         with:
           distribution: goreleaser
           version: latest
-          args: release --clean
-        env:
-          GITHUB_TOKEN: ${{ secrets.HOMEBREW_GITHUB_TOKEN }}
-          AUR_KEY: ${{ secrets.AUR_KEY }}
+          args: build --snapshot --clean
